@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 
-import { createStage } from '../gameHelpers'
+// Styled Components
 import { StyledTetris, StyledTetrisWrapper } from "./styles/StyledTetris";
+
+// Custom Hooks
+import { useStage } from "../hooks/useStage";
+import { usePlayer } from "../hooks/usePlayer";
 
 //Components
 import Stage from './Stage';
@@ -9,16 +13,26 @@ import StartButton from './StartButton';
 import Display from './Display';
 
 const Tetris = () => {
+    const [droptime, setDropTime] = useState(null);
+    const [gameOver, setGameOver] = useState(false);
+
+    const [player] = usePlayer();
+    const [stage, setStage] = useStage(player);
+
     return (
         <StyledTetrisWrapper>
             <StyledTetris>
-                <Stage stage={createStage()}/>
+                <Stage stage={stage}/>
                 <aside>
-                    <div>
-                        <Display text="Score"/>
-                        <Display text="Rows"/>
-                        <Display text="Level"/>
-                    </div>
+                    {gameOver ? (
+                        <Display gameOver={gameOver} text="Game Over!" />
+                    ) : (
+                        <div>
+                            <Display text="Score"/>
+                            <Display text="Rows"/>
+                            <Display text="Level"/>
+                        </div>
+                    )}
                     <StartButton />
                 </aside>
             </StyledTetris>
